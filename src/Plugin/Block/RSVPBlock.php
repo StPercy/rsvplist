@@ -39,7 +39,11 @@ class RSVPBlock extends BlockBase {
     $node = \Drupal::routeMatch()->getParameter('node');
 
     if ( !(is_null($node)) ) {
-      return AccessResult::allowedIfHasPermission($account, 'view rsvplist');
+      $enabler = \Drupal::service('rsvplist.enabler');
+      if ($enabler->isEnabled($node)) {
+           return AccessResult::allowedIfHasPermission($account, 'view rsvplist');
+      }
+
     }
     return AccessResult::forbidden();
   }
